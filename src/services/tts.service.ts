@@ -17,7 +17,7 @@ export async function textToSpeech(text: string): Promise<TTSResult> {
 
 function mockTTS(text: string): TTSResult {
     const audioBase64 = Buffer.from(text, 'utf-8').toString('base64');
-    console.log(`🔊 [MOCK TTS] Encoded reply as base64 (${text.length} chars)`);
+    console.log(`[MOCK TTS] Encoded reply as base64 (${text.length} chars)`);
     return {
         audioBase64,
         mimeType: 'text/plain',
