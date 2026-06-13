@@ -10,7 +10,7 @@ export async function speechToText(base64Audio: string): Promise<STTResult> {
     const apiKey = process.env.STT_API_KEY;
 
     if (!apiKey) {
-        console.warn('⚠️  STT_API_KEY not set — using mock transcription');
+        console.warn('STT_API_KEY not set — using mock transcription');
         return mockSTT(base64Audio);
     }
 
@@ -21,14 +21,14 @@ function mockSTT(base64Audio: string): STTResult {
     try {
         const decoded = Buffer.from(base64Audio, 'base64').toString('utf-8').trim();
         if (/^[\x20-\x7E\s]+$/.test(decoded) && decoded.length > 0) {
-            console.log(`🎙️  [MOCK STT] Using decoded text as transcript: "${decoded}"`);
+            console.log(`[MOCK STT] Using decoded text as transcript: "${decoded}"`);
             return { text: decoded, language: 'en', durationMs: 1000 };
         }
     } catch {
     }
 
     const fallback = 'I want to book an appointment';
-    console.log(`🎙️  [MOCK STT] Returning fallback transcript: "${fallback}"`);
+    console.log(`[MOCK STT] Returning fallback transcript: "${fallback}"`);
     return { text: fallback, language: 'en', durationMs: 1000 };
 }
 
