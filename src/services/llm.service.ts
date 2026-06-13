@@ -49,7 +49,7 @@ export async function callLLM(history: Message[], userText: string): Promise<LLM
     const apiKey = process.env.LLM_API_KEY;
 
     if (!apiKey) {
-        console.warn('⚠️  LLM_API_KEY not set — using mock fallback');
+        console.warn('LLM_API_KEY not set — using mock fallback');
         return mockLLM(userText, history);
     }
 
