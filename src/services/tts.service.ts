@@ -8,7 +8,7 @@ export async function textToSpeech(text: string): Promise<TTSResult> {
     const apiKey = process.env.TTS_API_KEY;
 
     if (!apiKey) {
-        console.warn('⚠️  TTS_API_KEY not set — using mock audio');
+        console.warn('TTS_API_KEY not set — using mock audio');
         return mockTTS(text);
     }
 
