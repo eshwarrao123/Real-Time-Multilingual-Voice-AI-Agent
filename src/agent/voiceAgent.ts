@@ -13,14 +13,12 @@ export interface AgentResult {
     latency: AgentLatency;
 }
 
-// Devanagari = Hindi, Tamil block = Tamil
 function detectLanguage(text: string): string {
     if (/[\u0900-\u097F]/.test(text)) return 'hi';
     if (/[\u0B80-\u0BFF]/.test(text)) return 'ta';
     return 'en';
 }
 
-// Placeholder — swap with real translation API later
 function mockTranslate(text: string, lang: string): string {
     if (lang === 'hi') return `[Hindi Translation] ${text}`;
     if (lang === 'ta') return `[Tamil Translation] ${text}`;
@@ -40,7 +38,6 @@ export async function processVoiceMessage(sessionId: string, userText: string): 
         updateProfile(session.patientId, { preferredLanguage: detectedLang });
     }
 
-    // LLM call
     const llmStart = Date.now();
     const llmResult = await callLLM(session.history, userText);
     const llmMs = Date.now() - llmStart;
@@ -61,7 +58,6 @@ export async function processVoiceMessage(sessionId: string, userText: string): 
 
     const ctx = getSession(sessionId)!.extractedEntities;
 
-    // Tool dispatch
     let reply: string;
     const toolStart = Date.now();
 
