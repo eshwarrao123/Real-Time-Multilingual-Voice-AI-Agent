@@ -12,7 +12,7 @@ interface TextClientMessage {
 
 interface AudioClientMessage {
     type: 'audio';
-    audio: string; // base64
+    audio: string;
 }
 
 type ClientMessage = TextClientMessage | AudioClientMessage;
@@ -43,7 +43,7 @@ interface AudioReplyMessage {
 export function handleConnection(socket: WebSocket): void {
     const sessionId = uuidv4();
     createSession(sessionId);
-    console.log(`🆔 Session started: ${sessionId}`);
+    console.log(`Session started: ${sessionId}`);
 
     socket.send(JSON.stringify({
         type: 'welcome',
@@ -63,7 +63,7 @@ export function handleConnection(socket: WebSocket): void {
                 sendError(socket, sessionId, 'Unknown message type. Send "user_message" or "audio".');
             }
         } catch (err) {
-            console.error(`❌ [${sessionId}] Error:`, err);
+            console.error(`[${sessionId}] Error:`, err);
             sendError(socket, sessionId, 'Internal error. Please try again.');
         }
     });
@@ -84,9 +84,9 @@ async function handleTextMessage(
         return;
     }
 
-    console.log(`📨 [${sessionId}] Text: ${msg.message}`);
+    console.log(`[${sessionId}] Text: ${msg.message}`);
     const { reply: replyText } = await processVoiceMessage(sessionId, msg.message);
-    console.log(`🤖 [${sessionId}] Reply: ${replyText}`);
+    console.log(`[${sessionId}] Reply: ${replyText}`);
 
     socket.send(JSON.stringify({ type: 'reply', reply: replyText } as TextServerMessage));
 }
@@ -109,17 +109,17 @@ async function handleAudioMessage(
     const sttStart = Date.now();
     const sttResult = await speechToText(msg.audio);
     const sttMs = Date.now() - sttStart;
-    console.log(`📝 [${sessionId}] Transcribed: "${sttResult.text}"`);
+    console.log(`[${sessionId}] Transcribed: "${sttResult.text}"`);
 
     // Agent
     const { reply: replyText, latency: agentLatency } = await processVoiceMessage(sessionId, sttResult.text);
-    console.log(`🤖 [${sessionId}] Reply: ${replyText}`);
+    console.log(`[${sessionId}] Reply: ${replyText}`);
 
     // TTS
     const ttsStart = Date.now();
     const ttsResult = await textToSpeech(replyText);
     const ttsMs = Date.now() - ttsStart;
-    console.log(`🔊 [${sessionId}] TTS complete (${ttsResult.mimeType})`);
+    console.log(`[${sessionId}] TTS complete (${ttsResult.mimeType})`);
 
     const latency: Latency = {
         stt: sttMs,
@@ -130,7 +130,7 @@ async function handleAudioMessage(
     };
 
     console.log(
-        `⏱️  [${sessionId}] [Latency] ` +
+        `  [${sessionId}] [Latency] ` +
         `STT: ${latency.stt} ms | LLM: ${latency.llm} ms | ` +
         `Tool: ${latency.tool} ms | TTS: ${latency.tts} ms | Total: ${latency.total} ms`,
     );
@@ -145,6 +145,6 @@ async function handleAudioMessage(
 }
 
 function sendError(socket: WebSocket, sessionId: string, message: string): void {
-    console.error(`❌ [${sessionId}] ${message}`);
+    console.error(`[${sessionId}] ${message}`);
     socket.send(JSON.stringify({ type: 'error', message } as TextServerMessage));
 }
