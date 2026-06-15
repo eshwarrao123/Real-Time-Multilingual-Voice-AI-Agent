@@ -5,10 +5,10 @@ import { handleConnection } from './wsHandler';
 export function initWebSocketServer(server: http.Server): void {
     const wss = new WebSocketServer({ server });
 
-    console.log('🔌 WebSocket server initialized');
+    console.log('WebSocket server initialized');
 
     wss.on('connection', (socket: WebSocket) => {
-        console.log('📞 New client connected');
+        console.log('New client connected');
         handleConnection(socket);
     });
 
